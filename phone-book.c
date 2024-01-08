@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 struct Contact {
     char name[50];
@@ -54,7 +55,37 @@ int addContact(char* name, char* phone, char* address, char* group) {
     fclose(file);
     return 0;
 }
+int deleteContact(char* name) {
+    char* file_path = "contacts.csv";
+    FILE* file = fopen(file_path, "r");
+    FILE* temp = fopen("temp.csv", "w");
+
+    if (file == NULL || temp == NULL) {
+        fprintf(stderr, "\n\n\t\tError opening files.");
+        exit(EXIT_FAILURE);
+
+    }
+    char line[1024];
+    while (fgets(line, 1024, file) != NULL) {
+        char* token = strtok(line, ",");
+        if(token != NULL && strcmp(token, name) !=0) {
+            fputs(line, temp);
+        }
+    }
+    fclose(file);
+    fclose(temp);
+
+    if (remove(file_path) != 0 || rename("temp.csv", file_path) != 0) {
+        fprintf(stderr, "\n\n\tError updating the file.\n");
+        exit(EXIT_FAILURE);
+    }
+    return 0;
+    
+}
+
 int main() {
-    displayMenu();
+    //displayMenu();
+    //addContact("ishola", "0201733020", "kumasi", "friends");
+    deleteContact("ishola");
     return 0;
 }
