@@ -55,6 +55,37 @@ int addContact(char* name, char* phone, char* address, char* group) {
     fclose(file);
     return 0;
 }
+struct Contact searchContact(char* name) {
+    struct Contact contact1;
+    FILE* file = fopen("contacts.csv", "r");
+
+    if(file == NULL) {
+        perror("\n\n\t\tError opening file.");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[1024];
+    while(fgets(line,1024, file) != NULL) {
+        char* token = strtok(line, ",");
+
+        if(strcmp(token, name) == 0) {
+            strcpy(contact1.name, token);
+            strcpy(contact1.phone, strtok(NULL, ","));
+            strcpy(contact1.address, strtok(NULL, ","));
+            strcpy(contact1.group, strtok(NULL, ","));
+            break;
+        }   
+    }
+
+    return contact1;
+}
+int printContact(char* name) {
+    struct Contact contact1 = searchContact(name);
+    printf("\n\n\t\tNAME : %s\n", contact1.name);
+    printf("\t\tPHONE: %s\n", contact1.phone);
+    printf("\t\tCITY : %s\n", contact1.address);
+    printf("\t\tGROUP: %s\n\n", contact1.group);
+}
 int deleteContact(char* name) {
     char* file_path = "contacts.csv";
     FILE* file = fopen(file_path, "r");
@@ -79,13 +110,107 @@ int deleteContact(char* name) {
         fprintf(stderr, "\n\n\tError updating the file.\n");
         exit(EXIT_FAILURE);
     }
+
+    printf("\n\n\tContact deleted successfully.\n");
+    
     return 0;
     
+}
+int displayContacts() {
+    FILE* file = fopen("contacts.csv", "r");
+
+    if(file == NULL) {
+        fprintf(stderr, "\n\n\t\tError opening file.");
+        exit(EXIT_FAILURE);
+    }
+
+    char line[1024];
+    printf("NAME\t\t\tNUMBER\t\t\tCITY\t\t\tGROUP\n\n");
+
+    while(fgets(line, 1024, file) != NULL) {
+        int index = 0;
+        char* token = strtok(line, ",");
+
+        while(token!=NULL) {
+            printf("%s\t\t\t", token);
+            token = strtok(NULL, ",");
+            index++;
+            if(index % 4 == 0) {
+                printf("\n\n");
+            }
+        }
+    }
+    fclose(file);
+    return 0;
+}
+int updateContact(char* name) {
+    int option;
+    struct Contact contact1 = searchContact(name);
+    printf("\n\n\tWhat do you want to change?");
+    printf("\n\n\t\t1. Name");
+    printf("\n\n\t\t2. Number");
+    printf("\n\n\t\t3. Address");
+    printf("\n\n\t\t4. Group");
+    printf("\n\n\tI want to change:\t");
+    if(scanf("%i", &option) != 1) {
+        printf("Invalid input");
+    }
+    switch (option)
+    {
+    char new[50];
+    case 1:
+        printf("\n\n\tEnter new Name:\t");
+
+        if(scanf("%s", new) != 1) {
+            printf("\n\n\t\tInvalid input");
+        }
+        deleteContact(contact1.name);
+        if(addContact(new, contact1.phone, contact1.address, contact1.group) == 0) {
+            printf("\n\n\t\tContacts successfully updated.");
+        }
+        break;
+    case 2:
+        printf("\n\n\tEnter new number:\t");
+        if(scanf("%s", new) != 1) {
+            printf("\n\n\t\tInvalid input");
+        }
+        deleteContact(contact1.name);
+        if( addContact(contact1.name, new, contact1.address, contact1.group) == 0) {
+            printf("\n\n\t\tContacts successfully updated.");
+        };
+        break;
+    case 3:
+        printf("\n\n\tEnter new address:\t");
+        if(scanf("%s", new) != 1) {
+            printf("\n\n\t\tInvalid input");
+        }
+        deleteContact(contact1.name);
+        if(addContact(contact1.name, contact1.phone, new, contact1.group) == 0) {
+            printf("\n\n\t\tContacts successfully updated.");
+        }
+        break;
+    case 4:
+        printf("\n\n\tEnter new group:\t");
+        if(scanf("%s", new) != 1) {
+            printf("\n\n\t\tInvalid input");
+        }
+
+        deleteContact(contact1.name);
+        if(addContact(contact1.name, contact1.phone,contact1.address , new) == 0) {
+            printf("\n\n\t\tContacts successfully updated.");
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 int main() {
     //displayMenu();
     //addContact("ishola", "0201733020", "kumasi", "friends");
-    deleteContact("ishola");
+    //deleteContact("ishola");
+    //displayContacts();
+    //printContact("ishola");
+    updateContact("ishola");
     return 0;
 }
