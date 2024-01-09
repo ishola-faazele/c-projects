@@ -11,6 +11,7 @@ struct Contact {
 };
 
 int displayMenu() {
+    int option;
     system("cls");
     system("color 02");
     printf("\n\n\t\t\xB2\xB2\xB2 PHONE BOOK \xB2\xB2\xB2");
@@ -20,6 +21,19 @@ int displayMenu() {
     printf("\n\n\t\t4. Display all contacts");
     printf("\n\n\t\t5. Update contact");
     printf("\n\n\t\t6. Exit the phone book\n\n");
+    scanf("%i", &option);
+    do{
+        switch (option)
+        {
+        case 1:
+            transition();
+            addContact();
+            break;
+        
+        default:
+            break;
+        }
+    } while(option < 1 || option > 6);
     return 0;
 }
 void loadingAnimation() {
@@ -42,7 +56,21 @@ void transition() {
     system("cls");
 }
 
-int addContact(char* name, char* phone, char* address, char* group) {
+int addContact() {
+    struct Contact contact1;
+
+    printf("\n\n\t\tName:\t");
+    scanf("%s", contact1.name);
+
+    printf("\n\n\t\tPhone:\t");
+    scanf("%s", contact1.phone);
+
+    printf("\n\n\t\tAddress:\t");
+    scanf("%s", contact1.address);
+
+    printf("\n\n\t\tGroup:\t");
+    scanf("%s", contact1.group);
+
     FILE* file = fopen("contacts.csv", "a+");
     if (file == NULL) {
         perror("\n\n\t\tError opening file");
@@ -50,11 +78,12 @@ int addContact(char* name, char* phone, char* address, char* group) {
     }
     char contact[256];
     // sprintf is used to concatenate strings.
-    sprintf(contact, "%s,%s,%s,%s\n", name, phone, address, group);
+    sprintf(contact, "%s,%s,%s,%s\n", contact1.name, contact1.phone, contact1.address, contact1.group);
     fputs(contact, file);
     fclose(file);
     return 0;
 }
+
 struct Contact searchContact(char* name) {
     struct Contact contact1;
     FILE* file = fopen("contacts.csv", "r");
@@ -213,4 +242,6 @@ int main() {
     //printContact("ishola");
     updateContact("ishola");
     return 0;
+    // loop to ensure that the user can run multiple operations without restarting the program
+
 }
