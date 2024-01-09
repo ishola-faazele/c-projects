@@ -278,13 +278,7 @@ int updateContact() {
 }
 
 int main() {
-    //displayMenu();
-    //addContact("ishola", "0201733020", "kumasi", "friends");
-    //deleteContact("ishola");
-    //displayContacts();
-    //printContact("ishola");
-    displayMenu();
+
     return 0;
-    // loop to ensure that the user can run multiple operations without restarting the program
 
 }
