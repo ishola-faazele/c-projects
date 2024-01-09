@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+int displayMenu();
+void loadingAnimation();
+void transition();
+int addContact();
+char* takeName();
+struct Contact searchContact(char*);
+int printContact();
+int deleteContact();
+int displayContacts();
+int updateContact();
+
 
 struct Contact {
     char name[50];
@@ -14,8 +25,8 @@ int displayMenu() {
     int option;
     system("cls");
     system("color 02");
-    printf("\n\n\t\t\xB2\xB2\xB2 PHONE BOOK \xB2\xB2\xB2");
-    printf("\n\n\n\t\t1. Add contacts");
+    printf("\n\n\t\t\xB2\xB2\xB2 PHONE BOOK \xB2\xB2\xB2\n");
+    printf("\n\n\t\t1. Add contacts");
     printf("\n\n\t\t2. Delete contacts");
     printf("\n\n\t\t3. Search contact");
     printf("\n\n\t\t4. Display all contacts");
@@ -32,7 +43,20 @@ int displayMenu() {
         case 2:
             transition();
             deleteContact();
+        case 3:
+            transition();
+            printContact();
+        case 4:
+            transition();
+            displayContacts();
+        case 5:
+            transition();
+            updateContact();
+        case 6:
+            transition();
+            exit(0);
         default:
+            printf("\n\n\tInvalid input. Enter a numeric response from 1-6");
             break;
         }
     } while(option < 1 || option > 6);
@@ -93,8 +117,8 @@ char* takeName() {
     scanf("%49s", name);
 }
 
-struct Contact searchContact() {
-    char* name = takeName();
+struct Contact searchContact(char* name) {
+    
 
     struct Contact contact1;
     FILE* file = fopen("contacts.csv", "r");
@@ -119,7 +143,8 @@ struct Contact searchContact() {
     return contact1;
 }
 
-int printContact(char* name) {
+int printContact() {
+    char* name = takeName();
     struct Contact contact1 = searchContact(name);
     printf("\n\n\t\tNAME : %s\n", contact1.name);
     printf("\t\tPHONE: %s\n", contact1.phone);
@@ -186,8 +211,11 @@ int displayContacts() {
     fclose(file);
     return 0;
 }
-int updateContact(char* name) {
+int updateContact() {
+    char* name = takeName();
+
     int option;
+
     struct Contact contact1 = searchContact(name);
     printf("\n\n\tWhat do you want to change?");
     printf("\n\n\t\t1. Name");
@@ -198,6 +226,7 @@ int updateContact(char* name) {
     if(scanf("%i", &option) != 1) {
         printf("Invalid input");
     }
+
     switch (option)
     {
     char new[50];
@@ -254,7 +283,7 @@ int main() {
     //deleteContact("ishola");
     //displayContacts();
     //printContact("ishola");
-    updateContact("ishola");
+    displayMenu();
     return 0;
     // loop to ensure that the user can run multiple operations without restarting the program
 
