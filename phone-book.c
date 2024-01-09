@@ -29,7 +29,9 @@ int displayMenu() {
             transition();
             addContact();
             break;
-        
+        case 2:
+            transition();
+            deleteContact();
         default:
             break;
         }
@@ -76,6 +78,7 @@ int addContact() {
         perror("\n\n\t\tError opening file");
         return 1;
     }
+
     char contact[256];
     // sprintf is used to concatenate strings.
     sprintf(contact, "%s,%s,%s,%s\n", contact1.name, contact1.phone, contact1.address, contact1.group);
@@ -84,7 +87,15 @@ int addContact() {
     return 0;
 }
 
-struct Contact searchContact(char* name) {
+char* takeName() {
+    char name[50];
+    printf("\n\n\t\tEnter the name of the contact to delete:\t");
+    scanf("%49s", name);
+}
+
+struct Contact searchContact() {
+    char* name = takeName();
+
     struct Contact contact1;
     FILE* file = fopen("contacts.csv", "r");
 
@@ -105,9 +116,9 @@ struct Contact searchContact(char* name) {
             break;
         }   
     }
-
     return contact1;
 }
+
 int printContact(char* name) {
     struct Contact contact1 = searchContact(name);
     printf("\n\n\t\tNAME : %s\n", contact1.name);
@@ -115,7 +126,10 @@ int printContact(char* name) {
     printf("\t\tCITY : %s\n", contact1.address);
     printf("\t\tGROUP: %s\n\n", contact1.group);
 }
-int deleteContact(char* name) {
+
+int deleteContact() {
+    char* name = takeName();
+
     char* file_path = "contacts.csv";
     FILE* file = fopen(file_path, "r");
     FILE* temp = fopen("temp.csv", "w");
